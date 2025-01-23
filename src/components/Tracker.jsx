@@ -13,7 +13,7 @@ function Tracker() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // If the field is 'amount', validate it to allow only numbers and decimals
+    
     if (name === "amount" && !/^[0-9]*\.?[0-9]*$/.test(value)) {
       return; // Prevent entering non-numeric characters like 'E'
     }
@@ -24,7 +24,9 @@ function Tracker() {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.description || !formData.amount || !formData.category) return;
+    if (!formData.description || !formData.amount || !formData.category) {
+      alert("Please fill out all fields!");
+    } return;
 
     const newExpense = {
       id: Date.now(),
@@ -48,7 +50,7 @@ function Tracker() {
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1>Expense Tracker</h1>
+      <h1>Expense Tracker Form</h1>
 
       {/* Expense Form */}
       <form onSubmit={handleSubmit} style={{ marginBottom: "20px" }}>
