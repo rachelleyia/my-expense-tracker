@@ -13,9 +13,9 @@ function Tracker() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    
+    // Validate amount input (numbers only)
     if (name === "amount" && !/^[0-9]*\.?[0-9]*$/.test(value)) {
-      return; // Prevent entering non-numeric characters like 'E'
+      return;
     }
 
     setFormData({ ...formData, [name]: value });
@@ -23,19 +23,34 @@ function Tracker() {
 
   // Handle form submission
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.description || !formData.amount || !formData.category) {
-      alert("Please fill out all fields!");
-    } return;
+    e.preventDefault(); // Prevent default form submission
 
+    // Validate input fields
+    if (!formData.description) {
+      alert("Please provide a description!");
+      return;
+    }
+    if (!formData.amount || parseFloat(formData.amount) <= 0) {
+      alert("Please provide a valid amount greater than 0!");
+      return;
+    }
+    if (!formData.category) {
+      alert("Please select a category!");
+      return;
+    }
+
+    // Create new expense
     const newExpense = {
       id: Date.now(),
       ...formData,
       amount: parseFloat(formData.amount).toFixed(2), // Ensure amount is stored as a fixed decimal
     };
 
+    // Add expense to the list
     setExpenses([...expenses, newExpense]);
-    setFormData({ description: "", amount: "", category: "" }); // Reset form
+
+    // Reset form fields
+    setFormData({ description: "", amount: "", category: "" });
   };
 
   // Handle deleting an expense
@@ -64,7 +79,7 @@ function Tracker() {
           style={{ marginRight: "10px", padding: "5px" }}
         />
         <input
-          type="text"  // Changed from number to text
+          type="text" // Changed from number to text
           name="amount"
           value={formData.amount}
           onChange={handleChange}
@@ -91,7 +106,7 @@ function Tracker() {
       {/* Expense List */}
       <h2>List of Expenses</h2>
       {expenses.length === 0 ? (
-        <p className="no-expenses">No expenses recorded yet.</p>
+        <p style={{ color: "gray", fontStyle: "italic" }}>No expenses recorded yet.</p>
       ) : (
         <ul>
           {expenses.map((expense) => (
@@ -99,7 +114,13 @@ function Tracker() {
               <strong>{expense.description}</strong> - ₱{expense.amount} ({expense.category})
               <button
                 onClick={() => handleDelete(expense.id)}
-                style={{ marginLeft: "10px", padding: "5px 10px", background: "red", color: "white" }}
+                style={{
+                  marginLeft: "10px",
+                  padding: "5px 10px",
+                  background: "red",
+                  color: "white",
+                  cursor: "pointer",
+                }}
               >
                 Delete
               </button>
